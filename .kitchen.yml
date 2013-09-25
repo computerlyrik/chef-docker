@@ -2,12 +2,14 @@
 driver_plugin: docker
 driver_config:
   docker_path: lxc-docker
+  require_chef_omnibus: true
 
 platforms:
 - name: ubuntu-12.04
   driver_config:
     image: ubuntu:12.04
     platform: ubuntu
+
   run_list:
   - recipe[apt]
 
