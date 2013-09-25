@@ -15,6 +15,6 @@
 *.sw[a-z]
 
 # tests
-*/test/*
+
 \.travis.yml
 Rakefile
