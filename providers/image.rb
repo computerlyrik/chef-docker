@@ -51,6 +51,7 @@ action :build do
   unless installed?
     full_image_name = new_resource.image_name
     full_image_name += ":#{new_resource.tag}" if new_resource.tag
+    Chef::Log.debug("docker build -t #{full_image_name} - < #{new_resource.dockerfile}")
     shell_out("docker build -t #{full_image_name} - < #{new_resource.dockerfile}")
     new_resource.updated_by_last_action(true)
   end

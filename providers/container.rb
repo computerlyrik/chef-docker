@@ -58,6 +58,7 @@ action :run do
     run_args += " -u #{new_resource.user}" if new_resource.user
     run_args += " -v #{new_resource.volume}" if new_resource.volume
     dr = shell_out("docker run #{run_args} #{new_resource.image} #{new_resource.command}")
+    Chef::Log.debug("docker run #{run_args} #{new_resource.image} #{new_resource.command}")
     new_resource.docker_id(dr.stdout.chomp)
     new_resource.updated_by_last_action(true)
   end
