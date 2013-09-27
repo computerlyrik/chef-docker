@@ -26,7 +26,7 @@ def load_current_resource
   dps.stdout.each_line do |dps_line|
     next unless dps_line.include?(new_resource.image) && dps_line.include?(new_resource.command)
     container_ps = dps_line.split(%r{\s\s+})
-    @current_resource.id(container_ps[0])
+    @current_resource.docker_id(container_ps[0])
     @current_resource.running(true) if container_ps[4].include?("Up")
     break
   end
@@ -34,8 +34,8 @@ def load_current_resource
 end
 
 action :remove do
-  stop if @current_resource.id
-  remove if @current_resource.id
+  stop if @current_resource.docker_id
+  remove if @current_resource.docker_id
   new_resource.updated_by_last_action(true)
 end
 
@@ -58,7 +58,7 @@ action :run do
     run_args += " -u #{new_resource.user}" if new_resource.user
     run_args += " -v #{new_resource.volume}" if new_resource.volume
     dr = shell_out("docker run #{run_args} #{new_resource.image} #{new_resource.command}")
-    new_resource.id(dr.stdout.chomp)
+    new_resource.docker_id(dr.stdout.chomp)
     new_resource.updated_by_last_action(true)
   end
 end
@@ -74,11 +74,11 @@ action :stop do
 end
 
 def remove
-  shell_out("docker rm #{current_resource.id}")
+  shell_out("docker rm #{current_resource.docker_id}")
 end
 
 def restart
-  shell_out("docker restart #{current_resource.id}")
+  shell_out("docker restart #{current_resource.docker_id}")
 end
 
 def running?
@@ -86,9 +86,9 @@ def running?
 end
 
 def start
-  shell_out("docker start #{current_resource.id}")
+  shell_out("docker start #{current_resource.docker_id}")
 end
 
 def stop
-  shell_out("docker stop #{current_resource.id}")
+  shell_out("docker stop #{current_resource.docker_id}")
 end
